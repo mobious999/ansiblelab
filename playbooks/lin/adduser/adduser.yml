@@ -1,6 +1,11 @@
 ---
 - hosts: all
   become: yes
+  vars:
+    - devops_password: 'abcddefsfdfdfdfdfdfdfdfdfdfd'
+  gather_facts: no
+  remote_user: root
+  become: true
 
   tasks:
   - name: Add a new user named ansible
