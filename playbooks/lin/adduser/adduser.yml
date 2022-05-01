@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+  - name: Add a new user named ansible
+    user:
+      name: chrony
+      shell: /bin/bash
+      password: "{{ ansible_password }}"
+
+  - name: Add ansible user to the sudoers
+    copy:
+      dest: "/etc/sudoers.d/ansible"
+      content: "ansible  ALL=(ALL)  NOPASSWD: ALL"
+
+  - name: name: Deploy SSH Key to remote host
+    authorized_key:
+      name: chronyd
+      state: started
+      enabled: yes
+
+  - name: Ensure chrony is running.
+    service:
+      name: chronyd
+      state: started
+      enabled: yes
+
