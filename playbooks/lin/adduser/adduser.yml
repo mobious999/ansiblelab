@@ -2,7 +2,7 @@
 - hosts: all
   become: yes
   vars:
-    - devops_password: 'abcddefsfdfdfdfdfdfdfdfdfdfd'
+    - ansible_password: 'ansible'
   gather_facts: no
   remote_user: root
   become: true
