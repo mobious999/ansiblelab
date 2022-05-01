@@ -21,13 +21,21 @@
       key: "{{ lookup('file', '/home/ansible/.ssh/id_rsa.pub') }}"
       path: /etc/ssh/authorized_keys/ansible
 
-  - name: Disable Password Authentication
-     lineinfile:
-        dest: /etc/ssh/sshd_config
-        regexp: '^PasswordAuthentication'
-        line: "PasswordAuthentication no"
-        state: present
-        backup: yes
+  - name: Disable password login
+    lineinfile: 
+      dest: /etc/ssh/sshd_config
+      regexp: '^(#\s*)?PasswordAuthentication '
+      line: 'PasswordAuthentication no'
+      state: present
+      backup: yes
+
+  - name: Disable remote root login
+    lineinfile: 
+      dest: /etc/ssh/sshd_config
+      regexp: '^#?PermitRootLogin' 
+      line: 'PermitRootLogin no'
+      state: present
+      backup: yes
 
   - name: Disable Root Login
      lineinfile:
@@ -37,8 +45,7 @@
         state: present
         backup: yes
 
-     notify:
-       - restart ssh
+    notify: restart sshd
 
 handlers:
    - name: restart ssh
