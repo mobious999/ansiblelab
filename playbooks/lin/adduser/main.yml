@@ -1,10 +1,11 @@
 ---
  - hosts: all
    vars:
-     - ansible_password: 'abcddefsfdfdfdfdfdfdfdfdfdfd'
-   gather_facts: no
+     - ansible_password: 'ansible'
+   gather_facts: yes
    remote_user: ubuntu
    become: true
+
 tasks:
 - name: Add a new user named ansible
      user:
@@ -35,6 +36,7 @@ tasks:
            backup=yes
      notify:
        - restart ssh
+
 handlers:
    - name: restart ssh
      service:
