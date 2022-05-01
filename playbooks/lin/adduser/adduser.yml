@@ -39,7 +39,7 @@
  
     notify: restart sshd
 
-handlers:
+  handlers:
    - name: restart ssh
      service:
        name=sshd
