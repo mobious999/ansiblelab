@@ -14,15 +14,31 @@
       dest: "/etc/sudoers.d/ansible"
       content: "ansible  ALL=(ALL)  NOPASSWD: ALL"
 
-  - name: name: Deploy SSH Key to remote host
-    authorized_key:
-      name: chronyd
-      state: started
-      enabled: yes
+  - name: Deploy SSH Key
+      authorized_key: user=devops
+                      key="{{ lookup('file', '/home/ansible/.ssh/id_rsa.pub') }}"
+                      state=present
+  
+  - name: Disable Password Authentication
+     lineinfile:
+           dest=/etc/ssh/sshd_config
+           regexp='^PasswordAuthentication'
+           line="PasswordAuthentication no"
+           state=present
+           backup=yes
 
-  - name: Ensure chrony is running.
-    service:
-      name: chronyd
-      state: started
-      enabled: yes
+  - name: Disable Root Login
+     lineinfile:
+           dest=/etc/ssh/sshd_config
+           regexp='^PermitRootLogin'
+           line="PermitRootLogin no"
+           state=present
+           backup=yes
+     notify:
+       - restart ssh
 
+handlers:
+   - name: restart ssh
+     service:
+       name=sshd
+       state=restarted
